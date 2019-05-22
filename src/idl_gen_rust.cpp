@@ -204,7 +204,7 @@ class RustGenerator : public BaseGenerator {
       "unsized", "virtual", "yield",
 
       // other rust terms we should not use
-      "std", "usize", "isize", "u8", "i8", "u16", "i16", "u32", "i32", "u64",
+      "core", "std", "usize", "isize", "u8", "i8", "u16", "i16", "u32", "i32", "u64",
       "i64", "u128", "i128", "f32", "f64",
 
       // These are terms the code generator can implement on types.
@@ -1492,7 +1492,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "  #[inline]";
     code_ +=
         "  pub fn key_compare_with_value(&self, val: {{KEY_TYPE}}) -> "
-        " ::std::cmp::Ordering {";
+        " ::core::cmp::Ordering {";
     code_ += "    let key = self.{{FIELD_NAME}}();";
     code_ += "    key.cmp(&val)";
     code_ += "  }";
@@ -1669,7 +1669,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "    fn push(&self, dst: &mut [u8], _rest: &[u8]) {";
     code_ += "        let src = unsafe {";
     code_ +=
-        "            ::std::slice::from_raw_parts("
+        "            ::core::slice::from_raw_parts("
         "self as *const {{STRUCT_NAME}} as *const u8, Self::size())";
     code_ += "        };";
     code_ += "        dst.copy_from_slice(src);";
@@ -1682,7 +1682,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "    fn push(&self, dst: &mut [u8], _rest: &[u8]) {";
     code_ += "        let src = unsafe {";
     code_ +=
-        "            ::std::slice::from_raw_parts("
+        "            ::core::slice::from_raw_parts("
         "*self as *const {{STRUCT_NAME}} as *const u8, Self::size())";
     code_ += "        };";
     code_ += "        dst.copy_from_slice(src);";
@@ -1783,9 +1783,11 @@ class RustGenerator : public BaseGenerator {
         code_ += indent + "use crate::" + basename + "_generated::*;";
       }
     }
-
-    code_ += indent + "use std::mem;";
-    code_ += indent + "use std::cmp::Ordering;";
+    
+    code_ += indent + "extern crate core;";
+    code_ += "";
+    code_ += indent + "use self::core::mem;";
+    code_ += indent + "use self::core::cmp::Ordering;";
     code_ += "";
     code_ += indent + "extern crate flatbuffers;";
     code_ += indent + "use self::flatbuffers::EndianScalar;";
