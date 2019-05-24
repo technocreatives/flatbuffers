@@ -1492,7 +1492,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "  #[inline]";
     code_ +=
         "  pub fn key_compare_with_value(&self, val: {{KEY_TYPE}}) -> "
-        " ::core::cmp::Ordering {";
+        " self::cmp::Ordering {";
     code_ += "    let key = self.{{FIELD_NAME}}();";
     code_ += "    key.cmp(&val)";
     code_ += "  }";
@@ -1669,7 +1669,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "    fn push(&self, dst: &mut [u8], _rest: &[u8]) {";
     code_ += "        let src = unsafe {";
     code_ +=
-        "            ::core::slice::from_raw_parts("
+        "            self::core::slice::from_raw_parts("
         "self as *const {{STRUCT_NAME}} as *const u8, Self::size())";
     code_ += "        };";
     code_ += "        dst.copy_from_slice(src);";
@@ -1682,7 +1682,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "    fn push(&self, dst: &mut [u8], _rest: &[u8]) {";
     code_ += "        let src = unsafe {";
     code_ +=
-        "            ::core::slice::from_raw_parts("
+        "            self::slice::from_raw_parts("
         "*self as *const {{STRUCT_NAME}} as *const u8, Self::size())";
     code_ += "        };";
     code_ += "        dst.copy_from_slice(src);";

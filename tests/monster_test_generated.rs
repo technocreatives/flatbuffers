@@ -2,10 +2,10 @@
 
 
 
-use crate::include_test1_generated::*;
-use crate::include_test2_generated::*;
-use std::mem;
-use std::cmp::Ordering;
+extern crate core;
+
+use self::core::mem;
+use self::core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::EndianScalar;
@@ -13,10 +13,10 @@ use self::flatbuffers::EndianScalar;
 #[allow(unused_imports, dead_code)]
 pub mod my_game {
 
-  use crate::include_test1_generated::*;
-  use crate::include_test2_generated::*;
-  use std::mem;
-  use std::cmp::Ordering;
+  extern crate core;
+
+  use self::core::mem;
+  use self::core::cmp::Ordering;
 
   extern crate flatbuffers;
   use self::flatbuffers::EndianScalar;
@@ -89,10 +89,10 @@ impl<'a: 'b, 'b> InParentNamespaceBuilder<'a, 'b> {
 #[allow(unused_imports, dead_code)]
 pub mod example_2 {
 
-  use crate::include_test1_generated::*;
-  use crate::include_test2_generated::*;
-  use std::mem;
-  use std::cmp::Ordering;
+  extern crate core;
+
+  use self::core::mem;
+  use self::core::cmp::Ordering;
 
   extern crate flatbuffers;
   use self::flatbuffers::EndianScalar;
@@ -167,10 +167,10 @@ impl<'a: 'b, 'b> MonsterBuilder<'a, 'b> {
 #[allow(unused_imports, dead_code)]
 pub mod example {
 
-  use crate::include_test1_generated::*;
-  use crate::include_test2_generated::*;
-  use std::mem;
-  use std::cmp::Ordering;
+  extern crate core;
+
+  use self::core::mem;
+  use self::core::cmp::Ordering;
 
   extern crate flatbuffers;
   use self::flatbuffers::EndianScalar;
@@ -542,7 +542,7 @@ impl<'b> flatbuffers::Push for Test {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(self as *const Test as *const u8, Self::size())
+            self::core::slice::from_raw_parts(self as *const Test as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -553,7 +553,7 @@ impl<'b> flatbuffers::Push for &'b Test {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(*self as *const Test as *const u8, Self::size())
+            self::core::slice::from_raw_parts(*self as *const Test as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -615,7 +615,7 @@ impl<'b> flatbuffers::Push for Vec3 {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(self as *const Vec3 as *const u8, Self::size())
+            self::core::slice::from_raw_parts(self as *const Vec3 as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -626,7 +626,7 @@ impl<'b> flatbuffers::Push for &'b Vec3 {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(*self as *const Vec3 as *const u8, Self::size())
+            self::core::slice::from_raw_parts(*self as *const Vec3 as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -699,7 +699,7 @@ impl<'b> flatbuffers::Push for Ability {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(self as *const Ability as *const u8, Self::size())
+            self::core::slice::from_raw_parts(self as *const Ability as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -710,7 +710,7 @@ impl<'b> flatbuffers::Push for &'b Ability {
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
         let src = unsafe {
-            ::core::slice::from_raw_parts(*self as *const Ability as *const u8, Self::size())
+            self::core::slice::from_raw_parts(*self as *const Ability as *const u8, Self::size())
         };
         dst.copy_from_slice(src);
     }
@@ -738,7 +738,7 @@ impl Ability {
   }
 
   #[inline]
-  pub fn key_compare_with_value(&self, val: u32) ->  ::core::cmp::Ordering {
+  pub fn key_compare_with_value(&self, val: u32) ->  self::core::cmp::Ordering {
     let key = self.id();
     key.cmp(&val)
   }
@@ -974,7 +974,7 @@ impl<'a> Referrable<'a> {
   }
 
   #[inline]
-  pub fn key_compare_with_value(&self, val: u64) ->  ::core::cmp::Ordering {
+  pub fn key_compare_with_value(&self, val: u64) ->  self::core::cmp::Ordering {
     let key = self.id();
     key.cmp(&val)
   }
@@ -1169,7 +1169,7 @@ impl<'a> Monster<'a> {
   }
 
   #[inline]
-  pub fn key_compare_with_value(&self, val: & str) ->  ::core::cmp::Ordering {
+  pub fn key_compare_with_value(&self, val: & str) ->  self::core::cmp::Ordering {
     let key = self.name();
     key.cmp(&val)
   }

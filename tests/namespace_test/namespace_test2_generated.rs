@@ -2,9 +2,10 @@
 
 
 
-use crate::namespace_test1_generated::*;
-use std::mem;
-use std::cmp::Ordering;
+extern crate core;
+
+use self::core::mem;
+use self::core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::EndianScalar;
@@ -12,9 +13,10 @@ use self::flatbuffers::EndianScalar;
 #[allow(unused_imports, dead_code)]
 pub mod namespace_a {
 
-  use crate::namespace_test1_generated::*;
-  use std::mem;
-  use std::cmp::Ordering;
+  extern crate core;
+
+  use self::core::mem;
+  use self::core::cmp::Ordering;
 
   extern crate flatbuffers;
   use self::flatbuffers::EndianScalar;
@@ -204,9 +206,10 @@ impl<'a: 'b, 'b> SecondTableInABuilder<'a, 'b> {
 #[allow(unused_imports, dead_code)]
 pub mod namespace_c {
 
-  use crate::namespace_test1_generated::*;
-  use std::mem;
-  use std::cmp::Ordering;
+  extern crate core;
+
+  use self::core::mem;
+  use self::core::cmp::Ordering;
 
   extern crate flatbuffers;
   use self::flatbuffers::EndianScalar;
