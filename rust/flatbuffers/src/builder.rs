@@ -686,13 +686,7 @@ impl<'fbb> FlatBufferBuilder<'fbb> {
     fn assert_nested(&self, fn_name: &'static str) {
         // we don't assert that self.field_locs.len() >0 because the vtable
         // could be empty (e.g. for empty tables, or for all-default values).
-        debug_assert!(
-            self.nested,
-            format!(
-                "incorrect FlatBufferBuilder usage: {} must be called while in a nested state",
-                fn_name
-            )
-        );
+        debug_assert!(self.nested, "incorrect FlatBufferBuilder usage: {} must be called while in a nested state", fn_name);
     }
     #[inline]
     fn assert_not_nested(&self, msg: &'static str) {
