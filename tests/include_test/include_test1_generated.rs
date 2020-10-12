@@ -3,8 +3,10 @@
 
 
 use crate::include_test2_generated::*;
-use std::mem;
-use std::cmp::Ordering;
+extern crate core;
+
+use self::core::mem;
+use self::core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::EndianScalar;

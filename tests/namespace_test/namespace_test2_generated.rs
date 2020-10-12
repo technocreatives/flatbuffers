@@ -2,6 +2,7 @@
 
 
 
+use crate::namespace_test1_generated::*;
 extern crate core;
 
 use self::core::mem;
@@ -13,6 +14,7 @@ use self::flatbuffers::EndianScalar;
 #[allow(unused_imports, dead_code)]
 pub mod namespace_a {
 
+  use crate::namespace_test1_generated::*;
   extern crate core;
 
   use self::core::mem;
@@ -206,6 +208,7 @@ impl<'a: 'b, 'b> SecondTableInABuilder<'a, 'b> {
 #[allow(unused_imports, dead_code)]
 pub mod namespace_c {
 
+  use crate::namespace_test1_generated::*;
   extern crate core;
 
   use self::core::mem;
