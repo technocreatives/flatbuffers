@@ -79,7 +79,7 @@ pub struct VTableWIPOffset {}
 /// data relative to the *end* of an in-progress FlatBuffer. The
 /// FlatBufferBuilder uses this to track the location of objects in an absolute
 /// way. The impl of Push converts a WIPOffset into a ForwardsUOffset.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct WIPOffset<T>(UOffsetT, PhantomData<T>);
 
 // We cannot use derive for these two impls, as the derived impls would only

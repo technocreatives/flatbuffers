@@ -1170,10 +1170,10 @@ class RustGenerator : public BaseGenerator {
     code_.SetValue("MAYBE_LT",
                    TableBuilderArgsNeedsLifetime(struct_def) ? "<'args>" : "");
     code_ += "    #[allow(unused_mut)]";
-    code_ += "    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(";
+    code_ += "    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(";
     code_ +=
         "        _fbb: "
-        "&'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,";
+        "&'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,";
     code_ +=
         "        {{MAYBE_US}}args: &'args {{STRUCT_NAME}}Args{{MAYBE_LT}})"
         " -> flatbuffers::WIPOffset<{{STRUCT_NAME}}<'bldr>> {";
@@ -1390,15 +1390,15 @@ class RustGenerator : public BaseGenerator {
     code_ += "}";
 
     // Generate a builder struct:
-    code_ += "pub struct {{STRUCT_NAME}}Builder<'a: 'b, 'b> {";
-    code_ += "  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,";
+    code_ += "pub struct {{STRUCT_NAME}}Builder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {";
+    code_ += "  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,";
     code_ +=
         "  start_: flatbuffers::WIPOffset<"
         "flatbuffers::TableUnfinishedWIPOffset>,";
     code_ += "}";
 
     // Generate builder functions:
-    code_ += "impl<'a: 'b, 'b> {{STRUCT_NAME}}Builder<'a, 'b> {";
+    code_ += "impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {{STRUCT_NAME}}Builder<'a, 'b, S> {";
     for (auto it = struct_def.fields.vec.begin();
          it != struct_def.fields.vec.end(); ++it) {
       const auto &field = **it;
@@ -1441,8 +1441,8 @@ class RustGenerator : public BaseGenerator {
     // Struct initializer (all fields required);
     code_ += "  #[inline]";
     code_ +=
-        "  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> "
-        "{{STRUCT_NAME}}Builder<'a, 'b> {";
+        "  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> "
+        "Self {";
     code_.SetValue("NUM_FIELDS", NumToString(struct_def.fields.vec.size()));
     code_ += "    let start = _fbb.start_table();";
     code_ += "    {{STRUCT_NAME}}Builder {";
@@ -1561,8 +1561,8 @@ class RustGenerator : public BaseGenerator {
     // Finish a buffer with a given root object:
     code_.SetValue("OFFSET_TYPELABEL", Name(struct_def) + "Offset");
     code_ += "#[inline]";
-    code_ += "pub fn finish_{{STRUCT_NAME_SNAKECASE}}_buffer<'a, 'b>(";
-    code_ += "    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,";
+    code_ += "pub fn finish_{{STRUCT_NAME_SNAKECASE}}_buffer<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>(";
+    code_ += "    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,";
     code_ += "    root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ += "  fbb.finish(root, Some({{STRUCT_NAME_CAPS}}_IDENTIFIER));";
@@ -1574,8 +1574,8 @@ class RustGenerator : public BaseGenerator {
     code_ += "#[inline]";
     code_ +=
         "pub fn finish_size_prefixed_{{STRUCT_NAME_SNAKECASE}}_buffer"
-        "<'a, 'b>("
-        "fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, "
+        "<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>("
+        "fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>, "
         "root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ +=

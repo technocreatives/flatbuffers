@@ -11,8 +11,9 @@ keywords = ["flatbuffers", "serialization", "zero-copy"]
 categories = ["encoding", "data-structures", "memory-management"]
 
 [dependencies]
-smallvec = "1.0"
+heapless = { package = "heapless", version = "0.5.6" }
 
 [features]
 default = ["std"]
 std = []
+alloc = []
