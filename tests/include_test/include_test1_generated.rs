@@ -34,8 +34,8 @@ impl<'a> TableA<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TableAArgs<'args>) -> flatbuffers::WIPOffset<TableA<'bldr>> {
       let mut builder = TableABuilder::new(_fbb);
       if let Some(x) = args.b { builder.add_b(x); }
@@ -61,17 +61,17 @@ impl<'a> Default for TableAArgs<'a> {
         }
     }
 }
-pub struct TableABuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TableABuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TableABuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TableABuilder<'a, 'b, S> {
   #[inline]
   pub fn add_b(&mut self, b: flatbuffers::WIPOffset<my_game::other_name_space::TableB<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<my_game::other_name_space::TableB>>(TableA::VT_B, b);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TableABuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TableABuilder {
       fbb_: _fbb,

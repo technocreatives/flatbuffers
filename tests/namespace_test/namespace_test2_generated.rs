@@ -50,8 +50,8 @@ impl<'a> TableInFirstNS<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TableInFirstNSArgs<'args>) -> flatbuffers::WIPOffset<TableInFirstNS<'bldr>> {
       let mut builder = TableInFirstNSBuilder::new(_fbb);
       if let Some(x) = args.foo_struct { builder.add_foo_struct(x); }
@@ -93,11 +93,11 @@ impl<'a> Default for TableInFirstNSArgs<'a> {
         }
     }
 }
-pub struct TableInFirstNSBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TableInFirstNSBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TableInFirstNSBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TableInFirstNSBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_foo_table(&mut self, foo_table: flatbuffers::WIPOffset<namespace_b::TableInNestedNS<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<namespace_b::TableInNestedNS>>(TableInFirstNS::VT_FOO_TABLE, foo_table);
@@ -111,7 +111,7 @@ impl<'a: 'b, 'b> TableInFirstNSBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<&namespace_b::StructInNestedNS>(TableInFirstNS::VT_FOO_STRUCT, foo_struct);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TableInFirstNSBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TableInFirstNSBuilder {
       fbb_: _fbb,
@@ -152,8 +152,8 @@ impl<'a> SecondTableInA<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args SecondTableInAArgs<'args>) -> flatbuffers::WIPOffset<SecondTableInA<'bldr>> {
       let mut builder = SecondTableInABuilder::new(_fbb);
       if let Some(x) = args.refer_to_c { builder.add_refer_to_c(x); }
@@ -179,17 +179,17 @@ impl<'a> Default for SecondTableInAArgs<'a> {
         }
     }
 }
-pub struct SecondTableInABuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SecondTableInABuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SecondTableInABuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> SecondTableInABuilder<'a, 'b, S> {
   #[inline]
   pub fn add_refer_to_c(&mut self, refer_to_c: flatbuffers::WIPOffset<super::namespace_c::TableInC<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<super::namespace_c::TableInC>>(SecondTableInA::VT_REFER_TO_C, refer_to_c);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SecondTableInABuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     SecondTableInABuilder {
       fbb_: _fbb,
@@ -244,8 +244,8 @@ impl<'a> TableInC<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TableInCArgs<'args>) -> flatbuffers::WIPOffset<TableInC<'bldr>> {
       let mut builder = TableInCBuilder::new(_fbb);
       if let Some(x) = args.refer_to_a2 { builder.add_refer_to_a2(x); }
@@ -279,11 +279,11 @@ impl<'a> Default for TableInCArgs<'a> {
         }
     }
 }
-pub struct TableInCBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TableInCBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TableInCBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TableInCBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_refer_to_a1(&mut self, refer_to_a1: flatbuffers::WIPOffset<super::namespace_a::TableInFirstNS<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<super::namespace_a::TableInFirstNS>>(TableInC::VT_REFER_TO_A1, refer_to_a1);
@@ -293,7 +293,7 @@ impl<'a: 'b, 'b> TableInCBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<super::namespace_a::SecondTableInA>>(TableInC::VT_REFER_TO_A2, refer_to_a2);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TableInCBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TableInCBuilder {
       fbb_: _fbb,

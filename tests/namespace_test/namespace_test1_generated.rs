@@ -186,8 +186,8 @@ impl<'a> TableInNestedNS<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TableInNestedNSArgs) -> flatbuffers::WIPOffset<TableInNestedNS<'bldr>> {
       let mut builder = TableInNestedNSBuilder::new(_fbb);
       builder.add_foo(args.foo);
@@ -213,17 +213,17 @@ impl<'a> Default for TableInNestedNSArgs {
         }
     }
 }
-pub struct TableInNestedNSBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TableInNestedNSBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TableInNestedNSBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TableInNestedNSBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_foo(&mut self, foo: i32) {
     self.fbb_.push_slot::<i32>(TableInNestedNS::VT_FOO, foo, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TableInNestedNSBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TableInNestedNSBuilder {
       fbb_: _fbb,

@@ -42,7 +42,7 @@ mod monster_test_generated;
 pub use monster_test_generated::my_game;
 
 // verbatim from the test suite:
-fn create_serialized_example_with_generated_code(builder: &mut flatbuffers::FlatBufferBuilder) {
+fn create_serialized_example_with_generated_code(builder: &mut flatbuffers::VecFlatBufferBuilder) {
     let mon = {
         let _ = builder.create_vector_of_strings(&[
             "these",
@@ -107,7 +107,7 @@ fn main() {
         assert_eq!(before + 1, after);
     }
 
-    let builder = &mut flatbuffers::FlatBufferBuilder::new();
+    let builder = &mut flatbuffers::VecFlatBufferBuilder::new();
     {
         // warm up the builder (it can make small allocs internally, such as for storing vtables):
         create_serialized_example_with_generated_code(builder);

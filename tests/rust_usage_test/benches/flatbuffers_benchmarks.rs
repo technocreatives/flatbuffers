@@ -31,7 +31,7 @@ pub use monster_test_generated::my_game;
 
 fn traverse_canonical_buffer(bench: &mut Bencher) {
     let owned_data = {
-        let mut builder = &mut flatbuffers::FlatBufferBuilder::new();
+        let mut builder = &mut flatbuffers::VecFlatBufferBuilder::new();
         create_serialized_example_with_generated_code(&mut builder, true);
         builder.finished_data().to_vec()
     };
@@ -44,7 +44,7 @@ fn traverse_canonical_buffer(bench: &mut Bencher) {
 }
 
 fn create_canonical_buffer_then_reset(bench: &mut Bencher) {
-    let mut builder = &mut flatbuffers::FlatBufferBuilder::new();
+    let mut builder = &mut flatbuffers::VecFlatBufferBuilder::new();
     // warmup
     create_serialized_example_with_generated_code(&mut builder, true);
     let n = builder.finished_data().len() as u64;
@@ -60,7 +60,7 @@ fn create_canonical_buffer_then_reset(bench: &mut Bencher) {
 
 #[inline(always)]
 fn create_serialized_example_with_generated_code(
-    builder: &mut flatbuffers::FlatBufferBuilder,
+    builder: &mut flatbuffers::VecFlatBufferBuilder,
     finish: bool,
 ) -> usize {
     let s0 = builder.create_string("test1");
@@ -178,7 +178,7 @@ fn traverse_serialized_example_with_generated_code(bytes: &[u8]) {
 }
 
 fn create_string_10(bench: &mut Bencher) {
-    let builder = &mut flatbuffers::FlatBufferBuilder::new_with_capacity(1 << 20);
+    let builder = &mut flatbuffers::VecFlatBufferBuilder::new_with_capacity(1 << 20);
     let mut i = 0;
     bench.iter(|| {
         builder.create_string("foobarbaz"); // zero-terminated -> 10 bytes
@@ -193,7 +193,7 @@ fn create_string_10(bench: &mut Bencher) {
 }
 
 fn create_string_100(bench: &mut Bencher) {
-    let builder = &mut flatbuffers::FlatBufferBuilder::new_with_capacity(1 << 20);
+    let builder = &mut flatbuffers::VecFlatBufferBuilder::new_with_capacity(1 << 20);
     let s_owned = (0..99).map(|_| "x").collect::<String>();
     let s: &str = &s_owned;
 
@@ -211,7 +211,7 @@ fn create_string_100(bench: &mut Bencher) {
 }
 
 fn create_byte_vector_100_naive(bench: &mut Bencher) {
-    let builder = &mut flatbuffers::FlatBufferBuilder::new_with_capacity(1 << 20);
+    let builder = &mut flatbuffers::VecFlatBufferBuilder::new_with_capacity(1 << 20);
     let v_owned = (0u8..100).map(|i| i).collect::<Vec<u8>>();
     let v: &[u8] = &v_owned;
 
@@ -229,7 +229,7 @@ fn create_byte_vector_100_naive(bench: &mut Bencher) {
 }
 
 fn create_byte_vector_100_optimal(bench: &mut Bencher) {
-    let builder = &mut flatbuffers::FlatBufferBuilder::new_with_capacity(1 << 20);
+    let builder = &mut flatbuffers::VecFlatBufferBuilder::new_with_capacity(1 << 20);
     let v_owned = (0u8..100).map(|i| i).collect::<Vec<u8>>();
     let v: &[u8] = &v_owned;
 

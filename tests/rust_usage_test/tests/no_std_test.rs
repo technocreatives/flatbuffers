@@ -32,7 +32,7 @@ fn no_std_example_data() {
 // here, the behavior has already been tested.
 
 fn build_mon<'a, 'b>(
-    builder: &'a mut flatbuffers::FlatBufferBuilder,
+    builder: &'a mut flatbuffers::VecFlatBufferBuilder,
     args: &'b my_game::example::MonsterArgs,
 ) -> my_game::example::Monster<'a> {
     let mon = my_game::example::Monster::create(builder, &args);
@@ -42,7 +42,7 @@ fn build_mon<'a, 'b>(
 
 #[test]
 fn vector_of_struct_store_with_type_inference() {
-    let mut b = flatbuffers::FlatBufferBuilder::new();
+    let mut b = flatbuffers::VecFlatBufferBuilder::new();
     let v = b.create_vector(&[
         my_game::example::Test::new(127, -128),
         my_game::example::Test::new(3, 123),

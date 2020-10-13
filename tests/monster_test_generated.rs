@@ -52,8 +52,8 @@ impl<'a> InParentNamespace<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         _args: &'args InParentNamespaceArgs) -> flatbuffers::WIPOffset<InParentNamespace<'bldr>> {
       let mut builder = InParentNamespaceBuilder::new(_fbb);
       builder.finish()
@@ -70,13 +70,13 @@ impl<'a> Default for InParentNamespaceArgs {
         }
     }
 }
-pub struct InParentNamespaceBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct InParentNamespaceBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> InParentNamespaceBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> InParentNamespaceBuilder<'a, 'b, S> {
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> InParentNamespaceBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     InParentNamespaceBuilder {
       fbb_: _fbb,
@@ -130,8 +130,8 @@ impl<'a> Monster<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         _args: &'args MonsterArgs) -> flatbuffers::WIPOffset<Monster<'bldr>> {
       let mut builder = MonsterBuilder::new(_fbb);
       builder.finish()
@@ -148,13 +148,13 @@ impl<'a> Default for MonsterArgs {
         }
     }
 }
-pub struct MonsterBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct MonsterBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> MonsterBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> MonsterBuilder<'a, 'b, S> {
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MonsterBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     MonsterBuilder {
       fbb_: _fbb,
@@ -782,8 +782,8 @@ impl<'a> TestSimpleTableWithEnum<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TestSimpleTableWithEnumArgs) -> flatbuffers::WIPOffset<TestSimpleTableWithEnum<'bldr>> {
       let mut builder = TestSimpleTableWithEnumBuilder::new(_fbb);
       builder.add_color(args.color);
@@ -809,17 +809,17 @@ impl<'a> Default for TestSimpleTableWithEnumArgs {
         }
     }
 }
-pub struct TestSimpleTableWithEnumBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TestSimpleTableWithEnumBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TestSimpleTableWithEnumBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TestSimpleTableWithEnumBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_color(&mut self, color: Color) {
     self.fbb_.push_slot::<Color>(TestSimpleTableWithEnum::VT_COLOR, color, Color::Green);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TestSimpleTableWithEnumBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TestSimpleTableWithEnumBuilder {
       fbb_: _fbb,
@@ -860,8 +860,8 @@ impl<'a> Stat<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args StatArgs<'args>) -> flatbuffers::WIPOffset<Stat<'bldr>> {
       let mut builder = StatBuilder::new(_fbb);
       builder.add_val(args.val);
@@ -903,11 +903,11 @@ impl<'a> Default for StatArgs<'a> {
         }
     }
 }
-pub struct StatBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct StatBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> StatBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> StatBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_id(&mut self, id: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Stat::VT_ID, id);
@@ -921,7 +921,7 @@ impl<'a: 'b, 'b> StatBuilder<'a, 'b> {
     self.fbb_.push_slot::<u16>(Stat::VT_COUNT, count, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> StatBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     StatBuilder {
       fbb_: _fbb,
@@ -962,8 +962,8 @@ impl<'a> Referrable<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args ReferrableArgs) -> flatbuffers::WIPOffset<Referrable<'bldr>> {
       let mut builder = ReferrableBuilder::new(_fbb);
       builder.add_id(args.id);
@@ -999,17 +999,17 @@ impl<'a> Default for ReferrableArgs {
         }
     }
 }
-pub struct ReferrableBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ReferrableBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ReferrableBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> ReferrableBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_id(&mut self, id: u64) {
     self.fbb_.push_slot::<u64>(Referrable::VT_ID, id, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ReferrableBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     ReferrableBuilder {
       fbb_: _fbb,
@@ -1051,8 +1051,8 @@ impl<'a> Monster<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args MonsterArgs<'args>) -> flatbuffers::WIPOffset<Monster<'bldr>> {
       let mut builder = MonsterBuilder::new(_fbb);
       builder.add_non_owning_reference(args.non_owning_reference);
@@ -1565,11 +1565,11 @@ impl<'a> Default for MonsterArgs<'a> {
         }
     }
 }
-pub struct MonsterBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct MonsterBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> MonsterBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> MonsterBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_pos(&mut self, pos: &Vec3) {
     self.fbb_.push_slot_always::<&Vec3>(Monster::VT_POS, pos);
@@ -1763,7 +1763,7 @@ impl<'a: 'b, 'b> MonsterBuilder<'a, 'b> {
     self.fbb_.push_slot::<Race>(Monster::VT_SIGNED_ENUM, signed_enum, Race::None);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MonsterBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     MonsterBuilder {
       fbb_: _fbb,
@@ -1805,8 +1805,8 @@ impl<'a> TypeAliases<'a> {
         }
     }
     #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,
         args: &'args TypeAliasesArgs<'args>) -> flatbuffers::WIPOffset<TypeAliases<'bldr>> {
       let mut builder = TypeAliasesBuilder::new(_fbb);
       builder.add_f64_(args.f64_);
@@ -1920,11 +1920,11 @@ impl<'a> Default for TypeAliasesArgs<'a> {
         }
     }
 }
-pub struct TypeAliasesBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TypeAliasesBuilder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TypeAliasesBuilder<'a, 'b> {
+impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> TypeAliasesBuilder<'a, 'b, S> {
   #[inline]
   pub fn add_i8_(&mut self, i8_: i8) {
     self.fbb_.push_slot::<i8>(TypeAliases::VT_I8_, i8_, 0);
@@ -1974,7 +1974,7 @@ impl<'a: 'b, 'b> TypeAliasesBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TypeAliases::VT_VF64, vf64);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TypeAliasesBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> Self {
     let start = _fbb.start_table();
     TypeAliasesBuilder {
       fbb_: _fbb,
@@ -2013,14 +2013,14 @@ pub fn monster_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 pub const MONSTER_EXTENSION: &str = "mon";
 
 #[inline]
-pub fn finish_monster_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_monster_buffer<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,
     root: flatbuffers::WIPOffset<Monster<'a>>) {
   fbb.finish(root, Some(MONSTER_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_monster_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<Monster<'a>>) {
+pub fn finish_size_prefixed_monster_buffer<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>, root: flatbuffers::WIPOffset<Monster<'a>>) {
   fbb.finish_size_prefixed(root, Some(MONSTER_IDENTIFIER));
 }
 }  // pub mod Example

@@ -14,7 +14,7 @@ macro_rules! make_test {
     ) => {
         #[test]
         fn $test_name() {
-            let mut builder = flatbuffers::FlatBufferBuilder::new();
+            let mut builder = flatbuffers::VecFlatBufferBuilder::new();
             // Test five makes sense when specified.
             let ss = ScalarStuff::create(
                 &mut builder,
