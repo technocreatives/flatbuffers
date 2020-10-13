@@ -1,24 +1,22 @@
-#[cfg(all(not(feature = "std"), feature = "alloc"))]
-use alloc::{vec, vec::Vec};
 use crate::{UOffsetT, builder::FieldLoc, FlatBufferBuilderStorage, FlatBufferBuilder};
-use crate::primitives::FLATBUFFERS_MAX_BUFFER_SIZE;
 use core::marker::PhantomData;
 
-#[cfg(any(feature = "std", feature = "alloc"))]
-pub struct VecFlatBufferBuilderStorage {
-    owned_buf: Vec<u8>,
-    field_locs: Vec<FieldLoc>,
-    written_vtable_revpos: Vec<UOffsetT>,
+use heapless::{Vec, ArrayLength};
+use as_slice::{AsSlice, AsMutSlice};
+
+pub struct HeaplessFlatBufferBuilderStorage<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> {
+    owned_buf: heapless::Vec<u8, B>,
+    field_locs: heapless::Vec<FieldLoc, F>,
+    written_vtable_revpos: heapless::Vec<UOffsetT, V>,
 }
 
-#[cfg(any(feature = "std", feature = "alloc"))]
-impl FlatBufferBuilderStorage for VecFlatBufferBuilderStorage {
+impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> FlatBufferBuilderStorage for HeaplessFlatBufferBuilderStorage<B,F,V> {
     fn bufs(&mut self) -> (&mut [u8], &mut [FieldLoc], &mut [UOffsetT]) {
         (self.owned_buf.as_mut_slice(), self.field_locs.as_mut_slice(), self.written_vtable_revpos.as_mut_slice())
     }
 
     fn resize(&mut self, size: usize) {
-        self.owned_buf.resize(size, 0)
+        self.owned_buf.resize(size, 0).unwrap()
     }
 
     fn reset_field_locs(&mut self) {
@@ -30,11 +28,11 @@ impl FlatBufferBuilderStorage for VecFlatBufferBuilderStorage {
     }
 
     fn push_field_loc(&mut self, item: FieldLoc) {
-        self.field_locs.push(item)
+        self.field_locs.push(item).unwrap()
     }
 
     fn push_written_vtable_revpos(&mut self, item: UOffsetT) {
-        self.written_vtable_revpos.push(item)
+        self.written_vtable_revpos.push(item).unwrap()
     }
 
     fn buffer_mut(&mut self) -> &mut [u8] {
@@ -54,32 +52,16 @@ impl FlatBufferBuilderStorage for VecFlatBufferBuilderStorage {
     }
 }
 
-#[cfg(any(feature = "std", feature = "alloc"))]
-impl<'fbb> FlatBufferBuilder<'fbb, VecFlatBufferBuilderStorage> {
+impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B,F,V>> {
     /// Create a FlatBufferBuilder that is ready for writing.
     pub fn new() -> Self {
-        Self::new_with_capacity(0)
-    }
-
-    /// Create a FlatBufferBuilder that is ready for writing, with a
-    /// ready-to-use capacity of the provided size.
-    ///
-    /// The maximum valid value is `FLATBUFFERS_MAX_BUFFER_SIZE`.
-    pub fn new_with_capacity(size: usize) -> Self {
-        // we need to check the size here because we create the backing buffer
-        // directly, bypassing the typical way of using grow_owned_buf:
-        assert!(
-            size <= FLATBUFFERS_MAX_BUFFER_SIZE,
-            "cannot initialize buffer bigger than 2 gigabytes"
-        );
-
         FlatBufferBuilder {
-            storage: VecFlatBufferBuilderStorage {
-                owned_buf: vec![0u8; size],
+            storage: HeaplessFlatBufferBuilderStorage {
+                owned_buf: Vec::new(),
                 field_locs: Vec::new(),
                 written_vtable_revpos: Vec::new(),
             },
-            head: size,
+            head: 0,
 
             nested: false,
             finished: false,
@@ -93,14 +75,13 @@ impl<'fbb> FlatBufferBuilder<'fbb, VecFlatBufferBuilderStorage> {
 
     /// Destroy the FlatBufferBuilder, returning its internal byte vector
     /// and the index into it that represents the start of valid data.
-    pub fn collapse(self) -> (Vec<u8>, usize) {
+    pub fn collapse(self) -> (heapless::Vec<u8, B>, usize) {
         (self.storage.owned_buf, self.head)
     }
 }
 
-#[cfg(any(feature = "std", feature = "alloc"))]
-impl<'fbb> Default for FlatBufferBuilder<'fbb, VecFlatBufferBuilderStorage> {
+impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> Default for FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B,F,V>> {
     fn default() -> Self {
-        Self::new_with_capacity(0)
+        Self::new()
     }
 }

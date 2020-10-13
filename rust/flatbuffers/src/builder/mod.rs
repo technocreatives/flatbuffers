@@ -34,6 +34,9 @@ mod vec;
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub use vec::VecFlatBufferBuilderStorage;
 
+mod heapless_vec;
+pub use heapless_vec::HeaplessFlatBufferBuilderStorage;
+
 type HeaplessStringVectorCapacity = heapless::consts::U64;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

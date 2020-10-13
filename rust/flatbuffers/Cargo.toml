@@ -12,6 +12,7 @@ categories = ["encoding", "data-structures", "memory-management"]
 
 [dependencies]
 heapless = { package = "heapless", version = "0.5.6" }
+as-slice = "0.1.4"
 
 [features]
 default = ["std"]

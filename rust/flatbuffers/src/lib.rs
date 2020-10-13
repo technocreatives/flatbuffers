@@ -46,10 +46,11 @@ mod vector;
 mod vtable;
 mod vtable_writer;
 
-
 pub use crate::builder::FlatBufferBuilder;
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub type VecFlatBufferBuilder<'fbb> = crate::builder::FlatBufferBuilder<'fbb, crate::builder::VecFlatBufferBuilderStorage>;
+
+pub type HeaplessFlatBufferBuilder<'fbb, B,F,V> = crate::builder::FlatBufferBuilder<'fbb, crate::builder::HeaplessFlatBufferBuilderStorage<B,F,V>>;
 
 pub use crate::builder::FlatBufferBuilderStorage;
 pub use crate::endian_scalar::{
