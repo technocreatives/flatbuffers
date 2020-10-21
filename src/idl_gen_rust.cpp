@@ -1173,7 +1173,7 @@ class RustGenerator : public BaseGenerator {
     code_ += "    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(";
     code_ +=
         "        _fbb: "
-        "&'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, S>,";
+        "&'mut_bldr mut flatbuffers::GenericFlatBufferBuilder<'bldr, S>,";
     code_ +=
         "        {{MAYBE_US}}args: &'args {{STRUCT_NAME}}Args{{MAYBE_LT}})"
         " -> flatbuffers::WIPOffset<{{STRUCT_NAME}}<'bldr>> {";
@@ -1391,7 +1391,7 @@ class RustGenerator : public BaseGenerator {
 
     // Generate a builder struct:
     code_ += "pub struct {{STRUCT_NAME}}Builder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {";
-    code_ += "  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,";
+    code_ += "  fbb_: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>,";
     code_ +=
         "  start_: flatbuffers::WIPOffset<"
         "flatbuffers::TableUnfinishedWIPOffset>,";
@@ -1441,7 +1441,7 @@ class RustGenerator : public BaseGenerator {
     // Struct initializer (all fields required);
     code_ += "  #[inline]";
     code_ +=
-        "  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>) -> "
+        "  pub fn new(_fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>) -> "
         "Self {";
     code_.SetValue("NUM_FIELDS", NumToString(struct_def.fields.vec.size()));
     code_ += "    let start = _fbb.start_table();";
@@ -1562,7 +1562,7 @@ class RustGenerator : public BaseGenerator {
     code_.SetValue("OFFSET_TYPELABEL", Name(struct_def) + "Offset");
     code_ += "#[inline]";
     code_ += "pub fn finish_{{STRUCT_NAME_SNAKECASE}}_buffer<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>(";
-    code_ += "    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>,";
+    code_ += "    fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>,";
     code_ += "    root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ += "  fbb.finish(root, Some({{STRUCT_NAME_CAPS}}_IDENTIFIER));";
@@ -1575,7 +1575,7 @@ class RustGenerator : public BaseGenerator {
     code_ +=
         "pub fn finish_size_prefixed_{{STRUCT_NAME_SNAKECASE}}_buffer"
         "<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>("
-        "fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, S>, "
+        "fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>, "
         "root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ +=

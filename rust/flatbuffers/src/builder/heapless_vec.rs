@@ -1,18 +1,31 @@
-use crate::{UOffsetT, builder::FieldLoc, FlatBufferBuilderStorage, FlatBufferBuilder};
+use crate::{
+    builder::{FieldLoc, FlatBufferBuilder},
+    FlatBufferBuilderStorage, UOffsetT,
+};
 use core::marker::PhantomData;
 
-use heapless::{Vec, ArrayLength};
-use as_slice::{AsSlice, AsMutSlice};
+use as_slice::{AsMutSlice, AsSlice};
+use heapless::{ArrayLength, Vec};
 
-pub struct HeaplessFlatBufferBuilderStorage<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> {
+pub struct HeaplessFlatBufferBuilderStorage<
+    B: ArrayLength<u8>,
+    F: ArrayLength<FieldLoc>,
+    V: ArrayLength<UOffsetT>,
+> {
     owned_buf: heapless::Vec<u8, B>,
     field_locs: heapless::Vec<FieldLoc, F>,
     written_vtable_revpos: heapless::Vec<UOffsetT, V>,
 }
 
-impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> FlatBufferBuilderStorage for HeaplessFlatBufferBuilderStorage<B,F,V> {
+impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>>
+    FlatBufferBuilderStorage for HeaplessFlatBufferBuilderStorage<B, F, V>
+{
     fn bufs(&mut self) -> (&mut [u8], &mut [FieldLoc], &mut [UOffsetT]) {
-        (self.owned_buf.as_mut_slice(), self.field_locs.as_mut_slice(), self.written_vtable_revpos.as_mut_slice())
+        (
+            self.owned_buf.as_mut_slice(),
+            self.field_locs.as_mut_slice(),
+            self.written_vtable_revpos.as_mut_slice(),
+        )
     }
 
     fn resize(&mut self, size: usize) {
@@ -39,20 +52,22 @@ impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> Fla
         self.owned_buf.as_mut_slice()
     }
 
-    fn buffer(& self) -> & [u8] {
+    fn buffer(&self) -> &[u8] {
         self.owned_buf.as_slice()
     }
 
-    fn field_locs(& self) -> & [FieldLoc] {
+    fn field_locs(&self) -> &[FieldLoc] {
         self.field_locs.as_slice()
     }
 
-    fn written_vtable_revpos(& self) -> & [UOffsetT] {
+    fn written_vtable_revpos(&self) -> &[UOffsetT] {
         self.written_vtable_revpos.as_slice()
     }
 }
 
-impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B,F,V>> {
+impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>>
+    FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B, F, V>>
+{
     /// Create a FlatBufferBuilder that is ready for writing.
     pub fn new() -> Self {
         FlatBufferBuilder {
@@ -80,7 +95,9 @@ impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT
     }
 }
 
-impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> Default for FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B,F,V>> {
+impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> Default
+    for FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B, F, V>>
+{
     fn default() -> Self {
         Self::new()
     }

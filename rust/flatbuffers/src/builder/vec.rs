@@ -1,7 +1,10 @@
+use crate::primitives::FLATBUFFERS_MAX_BUFFER_SIZE;
+use crate::{
+    builder::{FieldLoc, FlatBufferBuilder},
+    FlatBufferBuilderStorage, UOffsetT,
+};
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 use alloc::{vec, vec::Vec};
-use crate::{UOffsetT, builder::FieldLoc, FlatBufferBuilderStorage, FlatBufferBuilder};
-use crate::primitives::FLATBUFFERS_MAX_BUFFER_SIZE;
 use core::marker::PhantomData;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
@@ -14,7 +17,11 @@ pub struct VecFlatBufferBuilderStorage {
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl FlatBufferBuilderStorage for VecFlatBufferBuilderStorage {
     fn bufs(&mut self) -> (&mut [u8], &mut [FieldLoc], &mut [UOffsetT]) {
-        (self.owned_buf.as_mut_slice(), self.field_locs.as_mut_slice(), self.written_vtable_revpos.as_mut_slice())
+        (
+            self.owned_buf.as_mut_slice(),
+            self.field_locs.as_mut_slice(),
+            self.written_vtable_revpos.as_mut_slice(),
+        )
     }
 
     fn resize(&mut self, size: usize) {
@@ -41,15 +48,15 @@ impl FlatBufferBuilderStorage for VecFlatBufferBuilderStorage {
         self.owned_buf.as_mut_slice()
     }
 
-    fn buffer(& self) -> & [u8] {
+    fn buffer(&self) -> &[u8] {
         self.owned_buf.as_slice()
     }
 
-    fn field_locs(& self) -> & [FieldLoc] {
+    fn field_locs(&self) -> &[FieldLoc] {
         self.field_locs.as_slice()
     }
 
-    fn written_vtable_revpos(& self) -> & [UOffsetT] {
+    fn written_vtable_revpos(&self) -> &[UOffsetT] {
         self.written_vtable_revpos.as_slice()
     }
 }
