@@ -47,9 +47,7 @@ std::string MakeSnakeCase(const std::string &in) {
 // Convert a string to all uppercase.
 std::string MakeUpper(const std::string &in) {
   std::string s;
-  for (size_t i = 0; i < in.length(); i++) {
-    s += CharToUpper(in[i]);
-  }
+  for (size_t i = 0; i < in.length(); i++) { s += CharToUpper(in[i]); }
   return s;
 }
 
@@ -204,8 +202,8 @@ class RustGenerator : public BaseGenerator {
       "unsized", "virtual", "yield",
 
       // other rust terms we should not use
-      "core", "std", "usize", "isize", "u8", "i8", "u16", "i16", "u32", "i32", "u64",
-      "i64", "u128", "i128", "f32", "f64",
+      "core", "std", "usize", "isize", "u8", "i8", "u16", "i16", "u32", "i32",
+      "u64", "i64", "u128", "i128", "f32", "f64",
 
       // These are terms the code generator can implement on types.
       //
@@ -668,14 +666,13 @@ class RustGenerator : public BaseGenerator {
         return field.optional ? "None" : field.value.constant;
       }
       case ftBool: {
-        return field.optional ? "None" :
-          field.value.constant == "0" ? "false" : "true";
+        return field.optional                ? "None"
+               : field.value.constant == "0" ? "false"
+                                             : "true";
       }
       case ftUnionKey:
       case ftEnumKey: {
-        if (field.optional) {
-            return "None";
-        }
+        if (field.optional) { return "None"; }
         auto ev = field.value.type.enum_def->FindByValue(field.value.constant);
         assert(ev);
         return WrapInNameSpace(field.value.type.enum_def->defined_namespace,
@@ -868,16 +865,16 @@ class RustGenerator : public BaseGenerator {
       case ftBool:
       case ftFloat: {
         const auto typname = GetTypeBasic(field.value.type);
-        return (field.optional ?
-                   "self.fbb_.push_slot_always::<" :
-                   "self.fbb_.push_slot::<") + typname + ">";
+        return (field.optional ? "self.fbb_.push_slot_always::<"
+                               : "self.fbb_.push_slot::<") +
+               typname + ">";
       }
       case ftEnumKey:
       case ftUnionKey: {
         const auto underlying_typname = GetTypeBasic(type);
-        return (field.optional ?
-                   "self.fbb_.push_slot_always::<" :
-                   "self.fbb_.push_slot::<") + underlying_typname + ">";
+        return (field.optional ? "self.fbb_.push_slot_always::<"
+                               : "self.fbb_.push_slot::<") +
+               underlying_typname + ">";
       }
 
       case ftStruct: {
@@ -1005,7 +1002,7 @@ class RustGenerator : public BaseGenerator {
           const auto default_value = GetDefaultScalarValue(field);
           return "self._tab.get::<" + typname + ">(" + offset_name + ", Some(" +
                  default_value + ")).unwrap()";
-       }
+        }
       }
       case ftStruct: {
         const auto typname = WrapInNameSpace(*type.struct_def);
@@ -1170,10 +1167,11 @@ class RustGenerator : public BaseGenerator {
     code_.SetValue("MAYBE_LT",
                    TableBuilderArgsNeedsLifetime(struct_def) ? "<'args>" : "");
     code_ += "    #[allow(unused_mut)]";
-    code_ += "    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, S: flatbuffers::FlatBufferBuilderStorage>(";
+    code_ += "    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(";
     code_ +=
         "        _fbb: "
-        "&'mut_bldr mut flatbuffers::GenericFlatBufferBuilder<'bldr, S>,";
+        "&'mut_bldr mut impl "
+        "flatbuffers::builder::GenericFlatBufferBuilder<'bldr>,";
     code_ +=
         "        {{MAYBE_US}}args: &'args {{STRUCT_NAME}}Args{{MAYBE_LT}})"
         " -> flatbuffers::WIPOffset<{{STRUCT_NAME}}<'bldr>> {";
@@ -1390,15 +1388,21 @@ class RustGenerator : public BaseGenerator {
     code_ += "}";
 
     // Generate a builder struct:
-    code_ += "pub struct {{STRUCT_NAME}}Builder<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {";
-    code_ += "  fbb_: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>,";
+    code_ +=
+        "pub struct {{STRUCT_NAME}}Builder<'a: 'b, 'b, B: "
+        "flatbuffers::builder::GenericFlatBufferBuilder<'a>> {";
+    code_ += "  fbb_: &'b mut B,";
     code_ +=
         "  start_: flatbuffers::WIPOffset<"
-        "flatbuffers::TableUnfinishedWIPOffset>,";
+        "flatbuffers::TableUnfinishedWIPOffset>,"
+        "_lt : core::marker::PhantomData<&'a ()>";
     code_ += "}";
 
     // Generate builder functions:
-    code_ += "impl<'a: 'b, 'b, S: flatbuffers::FlatBufferBuilderStorage> {{STRUCT_NAME}}Builder<'a, 'b, S> {";
+    code_ +=
+        "impl<'a: 'b, 'b, B: "
+        "flatbuffers::builder::GenericFlatBufferBuilder<'a>> "
+        "{{STRUCT_NAME}}Builder<'a, 'b, B> {";
     for (auto it = struct_def.fields.vec.begin();
          it != struct_def.fields.vec.end(); ++it) {
       const auto &field = **it;
@@ -1441,13 +1445,16 @@ class RustGenerator : public BaseGenerator {
     // Struct initializer (all fields required);
     code_ += "  #[inline]";
     code_ +=
-        "  pub fn new(_fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>) -> "
+        "  pub fn new(_fbb: &'b mut "
+        "B) "
+        "-> "
         "Self {";
     code_.SetValue("NUM_FIELDS", NumToString(struct_def.fields.vec.size()));
     code_ += "    let start = _fbb.start_table();";
     code_ += "    {{STRUCT_NAME}}Builder {";
     code_ += "      fbb_: _fbb,";
     code_ += "      start_: start,";
+    code_ += "      _lt: core::marker::PhantomData,";
     code_ += "    }";
     code_ += "  }";
 
@@ -1561,8 +1568,10 @@ class RustGenerator : public BaseGenerator {
     // Finish a buffer with a given root object:
     code_.SetValue("OFFSET_TYPELABEL", Name(struct_def) + "Offset");
     code_ += "#[inline]";
-    code_ += "pub fn finish_{{STRUCT_NAME_SNAKECASE}}_buffer<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>(";
-    code_ += "    fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>,";
+    code_ += "pub fn finish_{{STRUCT_NAME_SNAKECASE}}_buffer<'a, 'b>(";
+    code_ +=
+        "    fbb: &'b mut impl "
+        "flatbuffers::builder::GenericFlatBufferBuilder<'a>,";
     code_ += "    root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ += "  fbb.finish(root, Some({{STRUCT_NAME_CAPS}}_IDENTIFIER));";
@@ -1574,8 +1583,8 @@ class RustGenerator : public BaseGenerator {
     code_ += "#[inline]";
     code_ +=
         "pub fn finish_size_prefixed_{{STRUCT_NAME_SNAKECASE}}_buffer"
-        "<'a, 'b, S: flatbuffers::FlatBufferBuilderStorage>("
-        "fbb: &'b mut flatbuffers::GenericFlatBufferBuilder<'a, S>, "
+        "<'a, 'b>("
+        "fbb: &'b mut impl flatbuffers::builder::GenericFlatBufferBuilder<'a>, "
         "root: flatbuffers::WIPOffset<{{STRUCT_NAME}}<'a>>) {";
     if (parser_.file_identifier_.length()) {
       code_ +=
@@ -1783,7 +1792,7 @@ class RustGenerator : public BaseGenerator {
         code_ += indent + "use crate::" + basename + "_generated::*;";
       }
     }
-    
+
     code_ += indent + "extern crate core;";
     code_ += "";
     code_ += indent + "use self::core::mem;";

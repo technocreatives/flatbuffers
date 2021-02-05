@@ -36,7 +36,7 @@ extern crate core;
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 extern crate alloc;
 
-mod builder;
+pub mod builder;
 mod endian_scalar;
 mod follow;
 mod primitives;
@@ -46,7 +46,7 @@ mod vector;
 mod vtable;
 mod vtable_writer;
 
-pub use crate::builder::FlatBufferBuilder as GenericFlatBufferBuilder;
+pub use crate::builder::GenericFlatBufferBuilder;
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub type VecFlatBufferBuilder<'fbb> =
     crate::builder::FlatBufferBuilder<'fbb, crate::builder::VecFlatBufferBuilderStorage>;
