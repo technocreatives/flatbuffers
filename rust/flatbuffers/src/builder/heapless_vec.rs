@@ -5,20 +5,16 @@ use crate::{
 use core::marker::PhantomData;
 
 use as_slice::{AsMutSlice, AsSlice};
-use heapless::{ArrayLength, Vec};
+use heapless::Vec;
 
-pub struct HeaplessFlatBufferBuilderStorage<
-    B: ArrayLength<u8>,
-    F: ArrayLength<FieldLoc>,
-    V: ArrayLength<UOffsetT>,
-> {
+pub struct HeaplessFlatBufferBuilderStorage<const B: usize, const F: usize, const V: usize> {
     owned_buf: heapless::Vec<u8, B>,
     field_locs: heapless::Vec<FieldLoc, F>,
     written_vtable_revpos: heapless::Vec<UOffsetT, V>,
 }
 
-impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>>
-    FlatBufferBuilderStorage for HeaplessFlatBufferBuilderStorage<B, F, V>
+impl<const B: usize, const F: usize, const V: usize> FlatBufferBuilderStorage
+    for HeaplessFlatBufferBuilderStorage<B, F, V>
 {
     fn bufs(&mut self) -> (&mut [u8], &mut [FieldLoc], &mut [UOffsetT]) {
         (
@@ -65,7 +61,7 @@ impl<B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>>
     }
 }
 
-impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>>
+impl<'fbb, const B: usize, const F: usize, const V: usize>
     FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B, F, V>>
 {
     /// Create a FlatBufferBuilder that is ready for writing.
@@ -95,7 +91,7 @@ impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT
     }
 }
 
-impl<'fbb, B: ArrayLength<u8>, F: ArrayLength<FieldLoc>, V: ArrayLength<UOffsetT>> Default
+impl<'fbb, const B: usize, const F: usize, const V: usize> Default
     for FlatBufferBuilder<'fbb, HeaplessFlatBufferBuilderStorage<B, F, V>>
 {
     fn default() -> Self {
