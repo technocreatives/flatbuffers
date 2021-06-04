@@ -37,7 +37,7 @@ pub use vec::VecFlatBufferBuilderStorage;
 mod heapless_vec;
 pub use heapless_vec::HeaplessFlatBufferBuilderStorage;
 
-type HeaplessStringVectorCapacity = heapless::consts::U64;
+const HeaplessStringVectorCapacity: usize = 64;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct FieldLoc {

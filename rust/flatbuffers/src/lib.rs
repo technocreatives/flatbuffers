@@ -53,10 +53,11 @@ pub type VecFlatBufferBuilder<'fbb> =
 #[cfg(any(feature = "std", feature = "alloc"))]
 pub type FlatBufferBuilder<'fbb> = VecFlatBufferBuilder<'fbb>;
 
-pub type HeaplessFlatBufferBuilder<'fbb, B, F, V> = crate::builder::FlatBufferBuilder<
-    'fbb,
-    crate::builder::HeaplessFlatBufferBuilderStorage<B, F, V>,
->;
+pub type HeaplessFlatBufferBuilder<'fbb, const B: usize, const F: usize, const V: usize> =
+    crate::builder::FlatBufferBuilder<
+        'fbb,
+        crate::builder::HeaplessFlatBufferBuilderStorage<B, F, V>,
+    >;
 
 pub use crate::builder::FlatBufferBuilderStorage;
 pub use crate::endian_scalar::{
