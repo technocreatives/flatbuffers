@@ -4,7 +4,6 @@ use crate::{
 };
 use core::marker::PhantomData;
 
-use as_slice::{AsMutSlice, AsSlice};
 use heapless::Vec;
 
 pub struct HeaplessFlatBufferBuilderStorage<const B: usize, const F: usize, const V: usize> {
@@ -18,9 +17,9 @@ impl<const B: usize, const F: usize, const V: usize> FlatBufferBuilderStorage
 {
     fn bufs(&mut self) -> (&mut [u8], &mut [FieldLoc], &mut [UOffsetT]) {
         (
-            self.owned_buf.as_mut_slice(),
-            self.field_locs.as_mut_slice(),
-            self.written_vtable_revpos.as_mut_slice(),
+            self.owned_buf.as_mut(),
+            self.field_locs.as_mut(),
+            self.written_vtable_revpos.as_mut(),
         )
     }
 
@@ -45,7 +44,7 @@ impl<const B: usize, const F: usize, const V: usize> FlatBufferBuilderStorage
     }
 
     fn buffer_mut(&mut self) -> &mut [u8] {
-        self.owned_buf.as_mut_slice()
+        self.owned_buf.as_mut()
     }
 
     fn buffer(&self) -> &[u8] {
