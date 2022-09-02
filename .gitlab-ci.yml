@@ -11,7 +11,7 @@ release-crate:
     - echo -e "Host \"thetc.dev\" exec \"test %p = 2222\"\n    User gitlab-ci-token:$CI_JOB_TOKEN\n    StrictHostKeyChecking no" > ~/.ssh/config
     - ssh-keygen -t ed25519 -q -f "$HOME/.ssh/id_ed25519" -N ""
     - cargo install cargo-get
-    - export CRATE_NAME=$(cargo get --name) CRATE_VERSION=$(cargo get version)
+    - export CRATE_NAME=$(cd rust/flatbuffers && cargo get --name) CRATE_VERSION=$(cd rust/flatbuffers && cargo get version)
     - export CRATE_FILE=${CRATE_NAME}-${CRATE_VERSION}.crate
   script:
     >
