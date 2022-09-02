@@ -14,8 +14,9 @@ release-crate:
     - export CRATE_NAME=$(cargo get --name) CRATE_VERSION=$(cargo get version)
     - export CRATE_FILE=${CRATE_NAME}-${CRATE_VERSION}.crate
   script:
-    - cd rust/flatbuffers && \
-      cargo package --no-verify && \
-      cargo metadata --format-version 1 > metadata.json && \
-      'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file target/package/${CRATE_FILE} "${CI_API_V4_URL}/projects/1033/packages/generic/${CRATE_NAME}/${CRATE_VERSION}/${CRATE_FILE}"' && \
-      'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file metadata.json "${CI_API_V4_URL}/projects/1033/packages/generic/${CRATE_NAME}/${CRATE_VERSION}/metadata.json"'
+    >
+      cd rust/flatbuffers &&
+      cargo package --no-verify &&
+      cargo metadata --format-version 1 > metadata.json &&
+      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file target/package/${CRATE_FILE} "${CI_API_V4_URL}/projects/1033/packages/generic/${CRATE_NAME}/${CRATE_VERSION}/${CRATE_FILE}" &&
+      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file metadata.json "${CI_API_V4_URL}/projects/1033/packages/generic/${CRATE_NAME}/${CRATE_VERSION}/metadata.json"
