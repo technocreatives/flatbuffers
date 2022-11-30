@@ -37,7 +37,7 @@ pub use vec::VecFlatBufferBuilderStorage;
 mod heapless_vec;
 pub use heapless_vec::HeaplessFlatBufferBuilderStorage;
 
-const HeaplessStringVectorCapacity: usize = 64;
+const HEAPLESS_STRING_VECTOR_CAPACITY: usize = 64;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct FieldLoc {
@@ -355,16 +355,16 @@ impl<'fbb, S: FlatBufferBuilderStorage> GenericFlatBufferBuilder<'fbb>
         xs: &'b [&'b str],
     ) -> WIPOffset<Vector<'fbb, ForwardsUOffset<&'fbb str>>> {
         self.assert_not_nested("create_vector_of_strings can not be called when a table or vector is under construction");
-        let mut offsets: heapless::Vec<WIPOffset<&str>, HeaplessStringVectorCapacity> =
+        let mut offsets: heapless::Vec<WIPOffset<&str>, HEAPLESS_STRING_VECTOR_CAPACITY> =
             heapless::Vec::new();
         debug_assert!(
             xs.len() < offsets.capacity(),
-            "string vector of length {} can't be longer than HeaplessStringVectorCapacity",
+            "string vector of length {} can't be longer than HEAPLESS_STRING_VECTOR_CAPACITY",
             xs.len()
         );
         offsets
             .resize_default(xs.len())
-            .expect("string vector can't be longer than HeaplessStringVectorCapacity");
+            .expect("string vector can't be longer than HEAPLESS_STRING_VECTOR_CAPACITY");
 
         // note that this happens in reverse, because the buffer is built back-to-front:
         for (i, &s) in xs.iter().enumerate().rev() {
@@ -757,15 +757,15 @@ impl<'fbb, S: FlatBufferBuilderStorage> FlatBufferBuilder<'fbb, S> {
     }
     #[inline]
     fn assert_not_nested(&self, msg: &'static str) {
-        debug_assert!(!self.nested, msg);
+        debug_assert!(!self.nested, "{}", msg);
     }
     #[inline]
     fn assert_finished(&self, msg: &'static str) {
-        debug_assert!(self.finished, msg);
+        debug_assert!(self.finished, "{}", msg);
     }
     #[inline]
     fn assert_not_finished(&self, msg: &'static str) {
-        debug_assert!(!self.finished, msg);
+        debug_assert!(!self.finished, "{}", msg);
     }
 }
 
