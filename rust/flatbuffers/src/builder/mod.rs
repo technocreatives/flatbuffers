@@ -97,6 +97,10 @@ pub trait GenericFlatBufferBuilder<'fbb> {
         &'a mut self,
         items: &'b [T],
     ) -> WIPOffset<Vector<'fbb, T>>;
+    fn create_vector_from_slices_direct<'a: 'b, 'b, T: SafeSliceAccess + Push + Sized + 'b>(
+        &'a mut self,
+        items: &'b [&'b [T]],
+    ) -> WIPOffset<Vector<'fbb, T>>;
     fn create_vector_of_strings<'a, 'b>(
         &'a mut self,
         xs: &'b [&'b str],
@@ -309,6 +313,34 @@ impl<'fbb, S: FlatBufferBuilderStorage> GenericFlatBufferBuilder<'fbb>
         };
         self.push_bytes_unprefixed(bytes);
         self.push(items.len() as UOffsetT);
+
+        WIPOffset::new(self.used_space() as UOffsetT)
+    }
+
+    /// Same as [create_vector_direct](Self::create_vector_direct), except that this function takes a slice of slices,
+    /// each of which are concatenated to form the final vector.
+    #[inline]
+    fn create_vector_from_slices_direct<'a: 'b, 'b, T: SafeSliceAccess + Push + Sized + 'b>(
+        &'a mut self,
+        parts: &'b [&'b [T]],
+    ) -> WIPOffset<Vector<'fbb, T>> {
+        self.assert_not_nested(
+            "create_vector_from_slices_direct can not be called when a table or vector is under construction",
+        );
+        let elem_size = T::size();
+        let len: usize = parts.iter().map(|part| part.len()).sum();
+        self.align(len * elem_size, T::alignment().max_of(SIZE_UOFFSET));
+
+        // note that this happens in reverse, because the buffer is built back-to-front:
+        for part in parts.iter().rev() {
+            let bytes = {
+                let ptr = part.as_ptr() as *const T as *const u8;
+                unsafe { from_raw_parts(ptr, part.len() * elem_size) }
+            };
+
+            self.push_bytes_unprefixed(bytes);
+        }
+        self.push(len as UOffsetT);
 
         WIPOffset::new(self.used_space() as UOffsetT)
     }
